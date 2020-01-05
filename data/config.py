@@ -109,11 +109,11 @@ dataset_base = Config({
     'name': 'Base Dataset',
 
     # Training images and annotations
-    'train_images': '/data/coco-1/images/',
+    'train_images': '/data/coco-1/images/train2017',
     'train_info':   'path_to_annotation_file',
 
     # Validation images and annotations.
-    'valid_images': '/data/coco-1/images/',
+    'valid_images': '/data/coco-1/images/val2017',
     'valid_info':   'path_to_annotation_file',
 
     # Whether or not to load GT. If this is False, eval.py quantitative evaluation won't work.

@@ -1104,4 +1104,4 @@ if __name__ == '__main__':
         evaluate(net, dataset)
 
 
-# python eval.py --trained_model=/data/trained_models_dataset/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --display
+# python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --score_threshold=0.15 --top_k=15 --display
