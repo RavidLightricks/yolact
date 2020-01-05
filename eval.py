@@ -9,7 +9,8 @@ from layers.output_utils import postprocess, undo_image_transformation
 import pycocotools
 
 from data import cfg, set_cfg, set_dataset
-
+from os.path import isdir, dirname
+from os import makedirs
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
@@ -610,6 +611,8 @@ def evalimage(net:Yolact, path:str, save_path:str=None):
         cv2.imwrite(save_path, img_numpy)
 
 def evalimages(net:Yolact, input_folder:str, output_folder:str):
+    if not isdir(output_folder):
+        makedirs(output_folder)
     if not os.path.exists(output_folder):
         os.mkdir(output_folder)
 
@@ -634,6 +637,8 @@ class CustomDataParallel(torch.nn.DataParallel):
         return sum(outputs, [])
 
 def evalvideo(net:Yolact, path:str, out_path:str=None):
+    if not isdir(dirname(out_path)):
+        makedirs(dirname(out_path))
     print('evalvideo', path, out_path)
     # If the path is a digit, parse it as a webcam index
     is_webcam = path.isdigit()
@@ -734,7 +739,7 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
                         video_frame_times.add(next_time - last_time)
                         video_fps = 1 / video_frame_times.get_avg()
                     if out_path is None:
-                        cv2.imwrite(path, frame_buffer.get())
+                        cv2.imshow(path, frame_buffer.get())
                     else:
                         out.write(frame_buffer.get())
                     frames_displayed += 1
@@ -868,6 +873,7 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
     cleanup_and_exit()
 
 def evaluate(net:Yolact, dataset, train_mode=False):
+    print('fast_nms:', args.fast_nms)
     net.detect.use_fast_nms = args.fast_nms
     net.detect.use_cross_class_nms = args.cross_class_nms
     cfg.mask_proto_debug = args.mask_proto_debug
