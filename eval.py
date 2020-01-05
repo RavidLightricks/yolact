@@ -98,7 +98,7 @@ def parse_args(argv=None):
     parser.add_argument('--image', default=None, type=str,
                         help='A path to an image to use for display.')
     parser.add_argument('--images', default=None, type=str,
-                        help='An input folder of images and output folder to save detected images. Should be in the format input->output.')
+                        help='An input folder of images and output folder to save detected images. Should be in the format input:output.')
     parser.add_argument('--video', default=None, type=str,
                         help='A path to a video to evaluate on. Passing in a number will use that index webcam.')
     parser.add_argument('--video_multiframe', default=1, type=int,
@@ -1104,4 +1104,4 @@ if __name__ == '__main__':
         evaluate(net, dataset)
 
 
-# python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --score_threshold=0.15 --top_k=15 --display
+# python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --images /data/coco-1/images/val2017:output --score_threshold=0.15 --top_k=15 --display
