@@ -634,6 +634,7 @@ class CustomDataParallel(torch.nn.DataParallel):
         return sum(outputs, [])
 
 def evalvideo(net:Yolact, path:str, out_path:str=None):
+    print('evalvideo', path, out_path)
     # If the path is a digit, parse it as a webcam index
     is_webcam = path.isdigit()
     
@@ -1105,3 +1106,4 @@ if __name__ == '__main__':
 
 
 # python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --images /data/coco-1/images/val2017:output --score_threshold=0.15 --top_k=15 --display
+# python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --video ./data/video.mov:output --score_threshold=0.15 --top_k=15 --display
