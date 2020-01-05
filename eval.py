@@ -734,7 +734,7 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
                         video_frame_times.add(next_time - last_time)
                         video_fps = 1 / video_frame_times.get_avg()
                     if out_path is None:
-                        cv2.imsave(path, frame_buffer.get())
+                        cv2.imwrite(path, frame_buffer.get())
                     else:
                         out.write(frame_buffer.get())
                     frames_displayed += 1
