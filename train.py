@@ -277,13 +277,13 @@ def train():
             for datum in data_loader:
                 print('Iter', iteration)
                 # Stop if we've reached an epoch if we're resuming from start_iter
-                # if iteration == (epoch+1)*epoch_size:
-                #     print('max iter reached2')
-                #     break
+                if iteration == (epoch+1)*epoch_size:
+                    print('max iter reached2')
+                    break
 
                 # Stop at the configured number of iterations even if mid-epoch
-                # if iteration == args.iters or cfg.max_iter:
-                #     break
+                if iteration == args.iters or cfg.max_iter:
+                    break
 
                 # Change a config setting if we've reached the specified iteration
                 changed = False
