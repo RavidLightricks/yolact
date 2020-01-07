@@ -94,10 +94,10 @@ class COCODetection(data.Dataset):
                    target is the object returned by ``coco.loadAnns``.
         """
         im, gt, masks, h, w, num_crowds = self.pull_item(index)
-        if self.person_only:
-            person_idx = np.where(gt[:, -1] == 0)
-            gt = gt[person_idx]
-            masks = masks[person_idx]
+        # if self.person_only:
+        #     person_idx = np.where(gt[:, -1] == 0)
+        #     gt = gt[person_idx]
+        #     masks = masks[person_idx]
         return im, (gt, masks, num_crowds)
 
     def __len__(self):
