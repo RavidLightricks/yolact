@@ -120,6 +120,8 @@ class COCODetection(data.Dataset):
 
             # Target has {'segmentation', 'area', iscrowd', 'image_id', 'bbox', 'category_id'}
             target = self.coco.loadAnns(ann_ids)
+            if self.person_only:
+                target = [t for t in target if t['category_id'] == 1]
         else:
             target = []
 
@@ -300,7 +302,7 @@ if __name__ == '__main__':
     from visualize import show_sample
     images_path = '/Users/ravid/Pictures/coco/images/val2017'
     anno_file = '/Users/ravid/Pictures/coco/annotations/instances_val2017.json'
-    gen = COCODetection(images_path, anno_file)
+    gen = COCODetection(images_path, anno_file, person_only=True)
     for x in gen:
         im, (gt, masks, num_crowds) = x
 
