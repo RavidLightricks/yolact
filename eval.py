@@ -873,7 +873,6 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
     cleanup_and_exit()
 
 def evaluate(net:Yolact, dataset, train_mode=False):
-    print('fast_nms:', args.fast_nms)
     net.detect.use_fast_nms = args.fast_nms
     net.detect.use_cross_class_nms = args.cross_class_nms
     cfg.mask_proto_debug = args.mask_proto_debug

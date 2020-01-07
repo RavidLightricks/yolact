@@ -6,7 +6,7 @@ import torch.utils.data as data
 import torch.nn.functional as F
 import cv2
 import numpy as np
-from .config import cfg
+from data.config import cfg
 from pycocotools import mask as maskUtils
 import random
 
@@ -283,3 +283,12 @@ def detection_collate(batch):
         num_crowds.append(sample[1][2])
 
     return imgs, (targets, masks, num_crowds)
+
+
+if __name__ == '__main__':
+
+    images_path = '/Users/ravid/Pictures/coco/images/val2017'
+    anno_file = '/Users/ravid/Pictures/coco/annotations/instances_val2017.json'
+    gen = COCODetection(images_path, anno_file)
+    gen.__getitem__(3)
+    print()
