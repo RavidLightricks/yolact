@@ -84,7 +84,7 @@ parser.add_argument('--person_only', action='store_true')
 
 
 # python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
-
+# python train.py --config=yolact_plus_resnet50_config  --save_folder output --iters 1000000 --person_only
 
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
 args = parser.parse_args()
