@@ -217,7 +217,7 @@ def train():
             args.start_iter = SavePath.from_str(args.resume).iteration
     else:
         print('Initializing weights...')
-        yolact_net.init_weights(backbone_path=join('weights' + cfg.backbone.path))
+        yolact_net.init_weights(backbone_path=join('weights', cfg.backbone.path))
 
     optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=args.momentum,
                           weight_decay=args.decay)
