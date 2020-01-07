@@ -82,7 +82,7 @@ parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
 
 
 
-# python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output
+# python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
 
 
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
@@ -245,7 +245,7 @@ def train():
     last_time = time.time()
 
     epoch_size = len(dataset) // args.batch_size
-    num_epochs = math.ceil(args.iters or cfg.max_iter / epoch_size)
+    num_epochs = math.ceil((args.iters or cfg.max_iter) / epoch_size)
     
     # Which learning rate adjustment step are we on? lr' = lr * gamma ^ step_index
     step_index = 0
