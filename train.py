@@ -57,7 +57,7 @@ parser.add_argument('--log_folder', default='logs/',
                     help='Directory for saving logs.')
 parser.add_argument('--config', default=None,
                     help='The config object to use.')
-parser.add_argument('--save_interval', default=10000, type=int,
+parser.add_argument('--save_interval', default=5000, type=int,
                     help='The number of iterations between saving the model.')
 parser.add_argument('--validation_size', default=5000, type=int,
                     help='The number of images to use for validation.')
@@ -79,7 +79,7 @@ parser.add_argument('--batch_alloc', default=None, type=str,
                     help='If using multiple GPUS, you can set this to be a comma separated list detailing which GPUs should get what local batch size (It should add up to your total batch size).')
 parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
                     help='YOLACT will automatically scale the lr and the number of iterations depending on the batch size. Set this if you want to disable that.')
-
+parser.add_argument('--person_only', action='store_true')
 
 
 # python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
@@ -179,13 +179,15 @@ def train():
 
     dataset = COCODetection(image_path=cfg.dataset.train_images,
                             info_file=cfg.dataset.train_info,
-                            transform=SSDAugmentation(MEANS))
+                            transform=SSDAugmentation(MEANS),
+                            person_only=args.person_only)
     
     if args.validation_epoch > 0:
         setup_eval()
         val_dataset = COCODetection(image_path=cfg.dataset.valid_images,
                                     info_file=cfg.dataset.valid_info,
-                                    transform=BaseTransform(MEANS))
+                                    transform=BaseTransform(MEANS),
+                                    person_only=args.person_only)
 
     # Parallel wraps the underlying module, but when saving and loading we don't want that
     yolact_net = Yolact()

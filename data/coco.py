@@ -63,7 +63,7 @@ class COCODetection(data.Dataset):
 
     def __init__(self, image_path, info_file, transform=None,
                  target_transform=None,
-                 dataset_name='MS COCO', has_gt=True):
+                 dataset_name='MS COCO', has_gt=True, person_only=False):
         # Do this here because we have too many things named COCO
         from pycocotools.coco import COCO
         
@@ -83,6 +83,8 @@ class COCODetection(data.Dataset):
         self.name = dataset_name
         self.has_gt = has_gt
 
+        self.person_only = person_only
+
     def __getitem__(self, index):
         """
         Args:
@@ -92,6 +94,10 @@ class COCODetection(data.Dataset):
                    target is the object returned by ``coco.loadAnns``.
         """
         im, gt, masks, h, w, num_crowds = self.pull_item(index)
+        if self.person_only:
+            person_idx = np.where(gt[:, -1] == 0)
+            gt = gt[person_idx]
+            masks = masks[person_idx]
         return im, (gt, masks, num_crowds)
 
     def __len__(self):
@@ -170,6 +176,7 @@ class COCODetection(data.Dataset):
                 masks = None
                 target = None
 
+        target = np.asarray(target)
         if target.shape[0] == 0:
             print('Warning: Augmentation output an example with no ground truth. Resampling...')
             return self.pull_item(random.randint(0, len(self.ids)-1))
@@ -257,6 +264,10 @@ def enforce_size(img, targets, masks, num_crowds, new_w, new_h):
         
 
 
+def show_img(x):
+    from matplotlib import pyplot as plt
+    plt.imshow(x.numpy().transpose(1, 2, 0)[..., ::-1])
+
 
 def detection_collate(batch):
     """Custom collate fn for dealing with batches of images that have a different
@@ -286,9 +297,12 @@ def detection_collate(batch):
 
 
 if __name__ == '__main__':
-
+    from visualize import show_sample
     images_path = '/Users/ravid/Pictures/coco/images/val2017'
     anno_file = '/Users/ravid/Pictures/coco/annotations/instances_val2017.json'
     gen = COCODetection(images_path, anno_file)
-    gen.__getitem__(3)
-    print()
+    for x in gen:
+        im, (gt, masks, num_crowds) = x
+
+        show_sample(im, gt, masks)
+
