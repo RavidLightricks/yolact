@@ -32,6 +32,7 @@ parser = argparse.ArgumentParser(
     description='Yolact Training Script')
 parser.add_argument('--batch_size', default=8, type=int,
                     help='Batch size for training')
+parser.add_argument('--epochs', default=200, type=int)
 parser.add_argument('--resume', default=None, type=str,
                     help='Checkpoint state_dict file to resume training from. If this is "interrupt"'\
                          ', the model will resume training from the interrupt file.')
@@ -81,7 +82,7 @@ parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
 
 
 
-# python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output
+# python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output --epochs
 
 
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
@@ -244,7 +245,7 @@ def train():
     last_time = time.time()
 
     epoch_size = len(dataset) // args.batch_size
-    num_epochs = math.ceil(cfg.max_iter / epoch_size)
+    num_epochs = args.epochs
     
     # Which learning rate adjustment step are we on? lr' = lr * gamma ^ step_index
     step_index = 0
@@ -266,6 +267,7 @@ def train():
     # try-except so you can use ctrl+c to save early and stop training
     try:
         for epoch in range(num_epochs):
+            print('Epoch %d / %d' % (epoch, num_epochs))
             # Resume from start_iter
             if (epoch+1)*epoch_size < iteration:
                 continue
