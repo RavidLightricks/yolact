@@ -270,6 +270,7 @@ def train():
             print('Epoch %d / %d' % (epoch, num_epochs))
             # Resume from start_iter
             if (epoch+1)*epoch_size < iteration:
+                print('max iter reached')
                 continue
             
             for datum in data_loader:
