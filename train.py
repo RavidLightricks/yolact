@@ -332,7 +332,8 @@ def train():
                     time_avg.add(elapsed)
 
                 if iteration % 10 == 0:
-                    eta_str = str(datetime.timedelta(seconds=(cfg.max_iter-iteration) * time_avg.get_avg())).split('.')[0]
+                    max_iter = args.epochs * args.steps_per_epoch
+                    eta_str = str(datetime.timedelta(seconds=(max_iter-iteration) * time_avg.get_avg())).split('.')[0]
                     
                     total = sum([loss_avgs[k].get_avg() for k in losses])
                     loss_labels = sum([[k, loss_avgs[k].get_avg()] for k in loss_types if k in losses], [])
