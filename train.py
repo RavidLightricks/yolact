@@ -264,13 +264,12 @@ def train():
                                   num_workers=args.num_workers,
                                   shuffle=True, collate_fn=detection_collate,
                                   pin_memory=True)
-    
-    
+
     save_path = lambda epoch, iteration: SavePath(cfg.name, epoch, iteration).get_path(root=args.save_folder)
     time_avg = MovingAverage()
 
     global loss_types # Forms the print order
-    loss_avgs  = { k: MovingAverage(100) for k in loss_types }
+    loss_avgs = {k: MovingAverage(100) for k in loss_types}
 
     print('Begin training!')
     print()
@@ -278,24 +277,7 @@ def train():
     try:
         for epoch in range(num_epochs):
             print('Epoch %d / %d' % (epoch, num_epochs))
-            # Resume from start_iter
-            # if (epoch+1)*epoch_size < iteration:
-            #     print(epoch, epoch_size, iteration)
-            #     print('max iter reached1')
-            #     continue
-
-            print(epoch_size, 'iterations')
             for datum in data_loader:
-                # Stop if we've reached an epoch if we're resuming from start_iter
-                # if iteration == (epoch+1)*epoch_size:
-                #     print('max iter reached2')
-                #     break
-
-                # Stop at the configured number of iterations even if mid-epoch
-                # if iteration == args.iters or cfg.max_iter:
-                #     break
-
-                # Change a config setting if we've reached the specified iteration
                 changed = False
                 for change in cfg.delayed_settings:
                     if iteration >= change[0]:
@@ -372,7 +354,7 @@ def train():
                 
                 iteration += 1
 
-                if iteration % args.save_interval == 0 and iteration != args.start_iter:
+                if iteration % args.save_interval == 0:
                     if args.keep_latest:
                         latest = SavePath.get_latest(args.save_folder, cfg.name)
 
@@ -385,8 +367,8 @@ def train():
                             os.remove(latest)
             
                     val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-                    cvnrg_linecharts('Val Boxes Map', iteration, val_info['box'])
-                    cvnrg_linecharts('Val Masks Map', iteration, val_info['mask'])
+                    cvnrg_linecharts('Val Boxes mAP', iteration, val_info['box'])
+                    cvnrg_linecharts('Val Masks mAP', iteration, val_info['mask'])
 
                     cvnrg_linechart('Total Loss', iteration, total)
                     for k in loss_types:
