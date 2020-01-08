@@ -127,7 +127,7 @@ class COCODetection(data.Dataset):
         else:
             target = []
         if len(target) == 0:
-            self.pull_item(random.randint(0, len(self.ids) - 1))
+            return self.pull_item(random.randint(0, len(self.ids) - 1))
 
         # Separate out crowd annotations. These are annotations that signify a large crowd of
         # objects of said class, where there is no annotation for each individual object. Both
