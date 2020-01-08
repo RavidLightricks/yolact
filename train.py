@@ -380,12 +380,11 @@ def train():
             
                     # This is done per epoch
                     if args.validation_epoch > 0:
-                        if epoch % args.validation_epoch == 0 and epoch > 0:
-                            val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-
+                        val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
+                        for k in val_info:
+                            cvnrg_linechart('Validation ' + k, iteration, val_info[k])
                     cvnrg_linechart('Learning Rate', iteration, cur_lr)
-                    for k in val_info:
-                        cvnrg_linechart('Validation ' + k, iteration, val_info[k])
+
 
         
         # Compute validation mAP after training is finished
