@@ -21,7 +21,7 @@ import torch.utils.data as data
 import numpy as np
 import argparse
 import datetime
-from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart, cvnrg_linecharts
+from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart
 
 # Oof
 import eval as eval_script
