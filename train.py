@@ -276,7 +276,8 @@ def train():
             #     print(epoch, epoch_size, iteration)
             #     print('max iter reached1')
             #     continue
-            
+
+            print(epoch_size, 'iterations')
             for datum in data_loader:
                 # Stop if we've reached an epoch if we're resuming from start_iter
                 # if iteration == (epoch+1)*epoch_size:
