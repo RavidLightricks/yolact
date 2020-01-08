@@ -42,7 +42,7 @@ parser.add_argument('--start_iter', default=-1, type=int,
                     help='Resume training at this iter. If this is -1, the iteration will be'\
                          'determined from the file name.')
 parser.add_argument('--epochs', default=100, type=int)
-parser.add_argument('--steps_per_epochs', default=None, type=int)
+parser.add_argument('--steps_per_epoch', default=None, type=int)
 parser.add_argument('--num_workers', default=None, type=int,
                     help='Number of workers used in dataloading')
 parser.add_argument('--cuda', default=True, type=str2bool,
