@@ -21,6 +21,7 @@ import torch.utils.data as data
 import numpy as np
 import argparse
 import datetime
+from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart
 
 # Oof
 import eval as eval_script
@@ -83,7 +84,7 @@ parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
 parser.add_argument('--person_only', action='store_true')
 
 
-# python train.py --config=yolact_plus_resnet50_config --resume=models/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
+# python train.py --config=yolact_plus_resnet50_config --resume=weights/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
 # python train.py --config=yolact_plus_resnet50_config  --save_folder output --iters 1000000 --person_only
 
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
@@ -377,10 +378,15 @@ def train():
                             print('Deleting old save...')
                             os.remove(latest)
             
-            # This is done per epoch
-            if args.validation_epoch > 0:
-                if epoch % args.validation_epoch == 0 and epoch > 0:
-                    compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
+                    # This is done per epoch
+                    if args.validation_epoch > 0:
+                        if epoch % args.validation_epoch == 0 and epoch > 0:
+                            val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
+
+                    cvnrg_linechart('Learning Rate', iteration, cur_lr)
+                    for k in val_info:
+                        cvnrg_linechart('Validation ' + k, iteration, val_info[k])
+
         
         # Compute validation mAP after training is finished
         compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
@@ -508,6 +514,8 @@ def compute_validation_map(epoch, iteration, yolact_net, dataset, log:Log=None):
             log.log('val', val_info, elapsed=(end - start), epoch=epoch, iter=iteration)
 
         yolact_net.train()
+
+    return val_info
 
 def setup_eval():
     eval_script.parse_args(['--no_bar', '--max_images='+str(args.validation_size)])
