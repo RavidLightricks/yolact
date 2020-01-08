@@ -11,6 +11,13 @@ try:
 except:
     e = None
 
+def is_experiment():
+    try:
+        e = Experiment()
+        e['title']
+    except:
+        return False
+    return True
 
 def cnvrg_print(key, val):
     print('cnvrg_tag_%s: %s'%(key, str(val)))
@@ -20,7 +27,7 @@ def cnvrg_tag(key, val):
 
 
 def cvnrg_linechart(chart_name, key, value, group=None):
-    if e is not None:
+    if is_experiment():
     # if False:
         e.log_metric(chart_name,
                     Ys=[value],
