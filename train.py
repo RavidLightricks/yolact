@@ -84,6 +84,7 @@ parser.add_argument('--batch_alloc', default=None, type=str,
 parser.add_argument('--no_autoscale', dest='autoscale', action='store_false',
                     help='YOLACT will automatically scale the lr and the number of iterations depending on the batch size. Set this if you want to disable that.')
 parser.add_argument('--person_only', action='store_true')
+parser.add_argument('--set_high_lr', action='store_true')
 
 
 # python train.py --config=yolact_plus_resnet50_config --resume=weights/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
@@ -296,7 +297,8 @@ def train():
                     set_lr(optimizer, (args.lr - cfg.lr_warmup_init) * (iteration / cfg.lr_warmup_until) + cfg.lr_warmup_init)
 
                 # Adjust the learning rate at the given iterations, but also if we resume from past that iteration
-                while step_index < len(cfg.lr_steps) and (iteration - 600000) >= cfg.lr_steps[step_index]:
+                while step_index < len(cfg.lr_steps) and \
+                        (iteration - 600000 if args.set_high_lr else iteration) >= cfg.lr_steps[step_index]:
                     step_index += 1
                     set_lr(optimizer, args.lr * (args.gamma ** step_index))
                 
