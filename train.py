@@ -21,7 +21,7 @@ import torch.utils.data as data
 import numpy as np
 import argparse
 import datetime
-from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart
+from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart, cvnrg_linecharts
 
 # Oof
 import eval as eval_script
@@ -378,14 +378,9 @@ def train():
                             print('Deleting old save...')
                             os.remove(latest)
             
-                    # This is done per epoch
-                    if args.validation_epoch > 0:
-                        val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-
-                        # for k in val_info:
-                        #     cvnrg_linechart('Validation ' + k, iteration, val_info[k])
-                        print(val_info)
-                        print(loss_labels)
+                    val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
+                    cvnrg_linecharts('Val Boxes Map', iteration, val_info['box'])
+                    cvnrg_linecharts('Val Masks Map', iteration, val_info['mask'])
 
                     cvnrg_linechart('Total Loss', iteration, total)
                     for k in loss_types:
@@ -411,7 +406,14 @@ def train():
     yolact_net.save_weights(save_path(epoch, iteration))
 
 
-# def
+def cvnrg_linecharts(chart_name, key, group_values_dict):
+    for group in group_values_dict:
+        if group == 'all':
+            cvnrg_linechart(chart_name + ' all', key, group_values_dict[group])
+        else:
+            cvnrg_linechart(chart_name, key, group_values_dict[group], group)
+
+
 def set_lr(optimizer, new_lr):
     for param_group in optimizer.param_groups:
         param_group['lr'] = new_lr

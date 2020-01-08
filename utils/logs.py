@@ -28,7 +28,6 @@ def cnvrg_tag(key, val):
 
 def cvnrg_linechart(chart_name, key, value, group=None):
     if is_experiment():
-    # if False:
         e.log_metric(chart_name,
                     Ys=[value],
                     Xs=[key],
