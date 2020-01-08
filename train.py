@@ -352,7 +352,7 @@ def train():
                     log.log_gpu_stats = args.log_gpu
                 
                 iteration += 1
-                if iteration == args.steps_per_epoch:
+                if iteration % args.steps_per_epoch == 0:
                     break
 
             latest = SavePath.get_latest(args.save_folder, cfg.name)
