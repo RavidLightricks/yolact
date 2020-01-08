@@ -411,7 +411,7 @@ def train():
     yolact_net.save_weights(save_path(epoch, iteration))
 
 
-def
+# def
 def set_lr(optimizer, new_lr):
     for param_group in optimizer.param_groups:
         param_group['lr'] = new_lr
