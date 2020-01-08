@@ -126,6 +126,8 @@ class COCODetection(data.Dataset):
                 #     target = target1
         else:
             target = []
+        if len(target) == 0:
+            self.pull_item(random.randint(0, len(self.ids) - 1))
 
         # Separate out crowd annotations. These are annotations that signify a large crowd of
         # objects of said class, where there is no annotation for each individual object. Both
@@ -180,7 +182,7 @@ class COCODetection(data.Dataset):
                 masks = None
                 target = None
 
-        target = np.asarray(target)
+        # target = np.asarray(target)
         if target.shape[0] == 0:
             print('Warning: Augmentation output an example with no ground truth. Resampling...')
             return self.pull_item(random.randint(0, len(self.ids)-1))
