@@ -183,7 +183,7 @@ class CustomDataParallel(nn.DataParallel):
 
 def train():
     if not os.path.exists(args.save_folder):
-        os.mkdir(args.save_folder)
+        os.makedirs(args.save_folder)
 
     dataset = COCODetection(image_path=cfg.dataset.train_images,
                             info_file=cfg.dataset.train_info,
