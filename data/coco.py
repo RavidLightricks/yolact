@@ -121,9 +121,9 @@ class COCODetection(data.Dataset):
             # Target has {'segmentation', 'area', iscrowd', 'image_id', 'bbox', 'category_id'}
             target = self.coco.loadAnns(ann_ids)
             if self.person_only:
-                target1 = [t for t in target if t['category_id'] == 1]
-                if len(target1) > 0:
-                    target = target1
+                target = [t for t in target if t['category_id'] == 1]
+                # if len(target1) > 0:
+                #     target = target1
         else:
             target = []
 
