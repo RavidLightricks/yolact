@@ -41,7 +41,8 @@ parser.add_argument('--resume', default=None, type=str,
 parser.add_argument('--start_iter', default=-1, type=int,
                     help='Resume training at this iter. If this is -1, the iteration will be'\
                          'determined from the file name.')
-parser.add_argument('--iters', default=None, type=int)
+parser.add_argument('--epochs', default=100, type=int)
+parser.add_argument('--steps_per_epochs', default=None, type=int)
 parser.add_argument('--num_workers', default=None, type=int,
                     help='Number of workers used in dataloading')
 parser.add_argument('--cuda', default=True, type=str2bool,
@@ -60,12 +61,12 @@ parser.add_argument('--log_folder', default='logs/',
                     help='Directory for saving logs.')
 parser.add_argument('--config', default=None,
                     help='The config object to use.')
-parser.add_argument('--save_interval', default=1000, type=int,
-                    help='The number of iterations between saving the model.')
+# parser.add_argument('--save_interval', default=1000, type=int,
+#                     help='The number of iterations between saving the model.')
 parser.add_argument('--validation_size', default=5000, type=int,
                     help='The number of images to use for validation.')
-parser.add_argument('--validation_epoch', default=1, type=int,
-                    help='Output validation information every n iterations. If -1, do no validation.')
+# parser.add_argument('--validation_epoch', default=1, type=int,
+#                     help='Output validation information every n iterations. If -1, do no validation.')
 parser.add_argument('--keep_latest', dest='keep_latest', action='store_true',
                     help='Only keep the latest checkpoint instead of each one.')
 parser.add_argument('--keep_latest_interval', default=100000, type=int,
@@ -91,6 +92,8 @@ parser.add_argument('--person_only', action='store_true')
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
 args = parser.parse_args()
 
+
+args.steps_per_epoch = args.steps_per_epoch or int(10000 / args.batch_size)
 args.num_workers = args.num_workers or multiprocessing.cpu_count() - 1
 if args.config is not None:
     set_cfg(args.config)
@@ -254,9 +257,6 @@ def train():
     iteration = max(args.start_iter, 0)
     last_time = time.time()
 
-    epoch_size = len(dataset) // args.batch_size
-    num_epochs = math.ceil((args.iters or cfg.max_iter) / epoch_size)
-    
     # Which learning rate adjustment step are we on? lr' = lr * gamma ^ step_index
     step_index = 0
 
@@ -275,8 +275,8 @@ def train():
     print()
     # try-except so you can use ctrl+c to save early and stop training
     try:
-        for epoch in range(num_epochs):
-            print('Epoch %d / %d' % (epoch, num_epochs))
+        for epoch in range(args.epochs):
+            print('Epoch %d / %d' % (epoch, args.epochs))
             for datum in data_loader:
                 changed = False
                 for change in cfg.delayed_settings:
@@ -354,33 +354,32 @@ def train():
                 
                 iteration += 1
 
-                if iteration % args.save_interval == 0:
-                    if args.keep_latest:
-                        latest = SavePath.get_latest(args.save_folder, cfg.name)
 
-                    print('Saving state, iter:', iteration)
-                    yolact_net.save_weights(save_path(epoch, iteration))
+            if args.keep_latest:
+                latest = SavePath.get_latest(args.save_folder, cfg.name)
 
-                    if args.keep_latest and latest is not None:
-                        if args.keep_latest_interval <= 0 or iteration % args.keep_latest_interval != args.save_interval:
-                            print('Deleting old save...')
-                            os.remove(latest)
-            
-                    val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-                    cvnrg_linecharts('Val Boxes mAP', iteration, val_info['box'])
-                    cvnrg_linecharts('Val Masks mAP', iteration, val_info['mask'])
+            print('Saving state, epoch:', epoch)
+            yolact_net.save_weights(save_path(epoch, iteration))
 
-                    cvnrg_linechart('Total Loss', iteration, total)
-                    for k in loss_types:
-                        if k not in losses:
-                            continue
-                        cvnrg_linechart('Losses', iteration, loss_avgs[k].get_avg(), group=k)
-                    cvnrg_linechart('Learning Rate', iteration, cur_lr)
+            if args.keep_latest and latest is not None:
+                if args.keep_latest_interval <= 0 or iteration % args.keep_latest_interval != args.save_interval:
+                    print('Deleting old save...')
+                    os.remove(latest)
+
+            val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
+            cvnrg_linecharts('Val Boxes mAP', epoch, val_info['box'])
+            cvnrg_linecharts('Val Masks mAP', epoch, val_info['mask'])
+
+            cvnrg_linechart('Total Loss', epoch, total)
+            for k in loss_types:
+                if k not in losses:
+                    continue
+                cvnrg_linechart('Losses', epoch, loss_avgs[k].get_avg(), group=k)
+            cvnrg_linechart('Learning Rate', epoch, cur_lr)
 
 
         
         # Compute validation mAP after training is finished
-        compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
     except KeyboardInterrupt:
         if args.interrupt:
             print('Stopping early. Saving network...')
@@ -391,7 +390,6 @@ def train():
             yolact_net.save_weights(save_path(epoch, repr(iteration) + '_interrupt'))
         exit()
 
-    yolact_net.save_weights(save_path(epoch, iteration))
 
 
 def cvnrg_linecharts(chart_name, key, group_values_dict):
