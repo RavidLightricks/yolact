@@ -21,7 +21,7 @@ import torch.utils.data as data
 import numpy as np
 import argparse
 import datetime
-from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart
+from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart, print_args
 
 # Oof
 import eval as eval_script
@@ -112,6 +112,7 @@ replace('decay')
 replace('gamma')
 replace('momentum')
 
+print_args(args)
 # This is managed by set_lr
 cur_lr = args.lr
 
@@ -203,6 +204,9 @@ def train():
     # I don't use the timer during training (I use a different timing method).
     # Apparently there's a race condition with multiple GPUs, so disable it just to be safe.
     timer.disable_all()
+
+    if SavePath.get_latest(args.save_folder, cfg.name) is not None:
+        args.resume = 'latest'
 
     # Both of these can set args.resume to None, so do them before the check    
     if args.resume == 'interrupt':
