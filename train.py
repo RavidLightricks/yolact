@@ -67,10 +67,10 @@ parser.add_argument('--validation_size', default=5000, type=int,
                     help='The number of images to use for validation.')
 # parser.add_argument('--validation_epoch', default=1, type=int,
 #                     help='Output validation information every n iterations. If -1, do no validation.')
-parser.add_argument('--keep_latest', dest='keep_latest', action='store_true',
-                    help='Only keep the latest checkpoint instead of each one.')
-parser.add_argument('--keep_latest_interval', default=100000, type=int,
-                    help='When --keep_latest is on, don\'t delete the latest file at these intervals. This should be a multiple of save_interval or 0.')
+# parser.add_argument('--keep_latest', dest='keep_latest', action='store_true',
+#                     help='Only keep the latest checkpoint instead of each one.')
+# parser.add_argument('--keep_latest_interval', default=100000, type=int,
+#                     help='When --keep_latest is on, don\'t delete the latest file at these intervals. This should be a multiple of save_interval or 0.')
 parser.add_argument('--dataset', default=None, type=str,
                     help='If specified, override the dataset specified in the config with this one (example: coco2017_dataset).')
 parser.add_argument('--no_log', dest='log', action='store_false',
@@ -89,7 +89,7 @@ parser.add_argument('--person_only', action='store_true')
 # python train.py --config=yolact_plus_resnet50_config --resume=weights/yolact_plus_resnet50_54_800000.pth --save_folder output --iters 500000
 # python train.py --config=yolact_plus_resnet50_config  --save_folder output --iters 1000000 --person_only
 
-parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
+parser.set_defaults(log=True, log_gpu=False, interrupt=True, autoscale=True)
 args = parser.parse_args()
 
 
@@ -353,17 +353,13 @@ def train():
                 
                 iteration += 1
 
-
-            if args.keep_latest:
-                latest = SavePath.get_latest(args.save_folder, cfg.name)
+            latest = SavePath.get_latest(args.save_folder, cfg.name)
 
             print('Saving state, epoch:', epoch)
             yolact_net.save_weights(save_path(epoch, iteration))
 
-            if args.keep_latest and latest is not None:
-                if args.keep_latest_interval <= 0 or iteration % args.keep_latest_interval != args.save_interval:
-                    print('Deleting old save...')
-                    os.remove(latest)
+            if latest is not None:
+                os.remove(latest)
 
             val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
             cvnrg_linecharts('Val Boxes mAP', epoch, val_info['box'])
