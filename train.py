@@ -296,7 +296,7 @@ def train():
                     set_lr(optimizer, (args.lr - cfg.lr_warmup_init) * (iteration / cfg.lr_warmup_until) + cfg.lr_warmup_init)
 
                 # Adjust the learning rate at the given iterations, but also if we resume from past that iteration
-                while step_index < len(cfg.lr_steps) and iteration >= cfg.lr_steps[step_index]:
+                while step_index < len(cfg.lr_steps) and (iteration - 600000) >= cfg.lr_steps[step_index]:
                     step_index += 1
                     set_lr(optimizer, args.lr * (args.gamma ** step_index))
                 
