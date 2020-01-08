@@ -381,8 +381,15 @@ def train():
                     # This is done per epoch
                     if args.validation_epoch > 0:
                         val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-                        for k in val_info:
-                            cvnrg_linechart('Validation ' + k, iteration, val_info[k])
+                        # for k in val_info:
+                        #     cvnrg_linechart('Validation ' + k, iteration, val_info[k])
+                        print(val_info)
+
+                    cvnrg_linechart('Total Loss', iteration, total)
+                    for k in loss_types:
+                        if k not in losses:
+                            continue
+                        cvnrg_linechart('Losses', iteration, loss_avgs[k].get_avg(), group=k)
                     cvnrg_linechart('Learning Rate', iteration, cur_lr)
 
 
