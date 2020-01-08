@@ -21,6 +21,7 @@ import torch.utils.data as data
 import numpy as np
 import argparse
 import datetime
+import multiprocessing
 from utils.logs import cnvrg_print, cnvrg_tag, cvnrg_linechart, print_args
 
 # Oof
@@ -41,7 +42,7 @@ parser.add_argument('--start_iter', default=-1, type=int,
                     help='Resume training at this iter. If this is -1, the iteration will be'\
                          'determined from the file name.')
 parser.add_argument('--iters', default=None, type=int)
-parser.add_argument('--num_workers', default=7, type=int,
+parser.add_argument('--num_workers', default=None, type=int,
                     help='Number of workers used in dataloading')
 parser.add_argument('--cuda', default=True, type=str2bool,
                     help='Use CUDA to train model')
@@ -90,6 +91,7 @@ parser.add_argument('--person_only', action='store_true')
 parser.set_defaults(keep_latest=False, log=True, log_gpu=False, interrupt=True, autoscale=True)
 args = parser.parse_args()
 
+args.num_workers = args.num_workers or multiprocessing.cpu_count() - 1
 if args.config is not None:
     set_cfg(args.config)
 
