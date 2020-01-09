@@ -900,7 +900,7 @@ def evaluate(net:Yolact, dataset, train_mode=False):
                         try:
                             evalvideo(net, join(inp, f_name), join(out, f_name))
                         except:
-                            pass
+                            print('Error in:', f_name)
 
             else:
                 print('No such file or directory:', inp)
