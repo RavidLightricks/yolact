@@ -131,7 +131,7 @@ def prep_display(dets_out, img, class_color=False, mask_alpha=0.45):
 
             if True:
                 _class = cfg.dataset.class_names[int(classes[j])]
-                text_str = '%s: %.2f' % (_class, score) if False else _class
+                text_str = '%s: %.6f' % (_class, score) if False else _class
 
                 font_face = cv2.FONT_HERSHEY_DUPLEX
                 font_scale = 0.6

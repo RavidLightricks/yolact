@@ -160,7 +160,7 @@ def pretty_str(x:list):
     elif isinstance(x, np.ndarray):
         return pretty_str(list(x))
     else:
-        return '%.2f' % x
+        return '%.6f' % x
 
 if __name__ == '__main__':
     

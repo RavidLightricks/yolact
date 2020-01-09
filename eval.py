@@ -1057,7 +1057,7 @@ def print_maps(all_maps):
     print(make_row([''] + [('.%d ' % x if isinstance(x, int) else x + ' ') for x in all_maps['box'].keys()]))
     print(make_sep(len(all_maps['box']) + 1))
     for iou_type in ('box', 'mask'):
-        print(make_row([iou_type] + ['%.6f' % x if x < 100 else '%.1f' % x for x in all_maps[iou_type].values()]))
+        print(make_row([iou_type] + ['%.2f' % x if x < 100 else '%.1f' % x for x in all_maps[iou_type].values()]))
     print(make_sep(len(all_maps['box']) + 1))
     print()
 
