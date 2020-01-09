@@ -401,6 +401,7 @@ def cvnrg_linecharts(chart_name, key, group_values_dict):
 
 
 def set_lr(optimizer, new_lr):
+    print('set new lr', new_lr)
     for param_group in optimizer.param_groups:
         param_group['lr'] = new_lr
     
