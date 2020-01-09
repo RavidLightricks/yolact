@@ -9,8 +9,8 @@ from layers.output_utils import postprocess, undo_image_transformation
 import pycocotools
 
 from data import cfg, set_cfg, set_dataset
-from os.path import isdir, dirname
-from os import makedirs
+from os.path import isdir, dirname, isfile, join
+from os import makedirs, listdir
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
@@ -892,7 +892,14 @@ def evaluate(net:Yolact, dataset, train_mode=False):
     elif args.video is not None:
         if ':' in args.video:
             inp, out = args.video.split(':')
-            evalvideo(net, inp, out)
+            if isfile(inp):
+                evalvideo(net, inp, out)
+            elif isdir(inp):
+                for f_name in listdir(inp):
+                    evalvideo(net, join(inp, f_name), out)
+            else:
+                print('No such file or directory:', inp)
+                exit()
         else:
             evalvideo(net, args.video)
         return
