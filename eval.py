@@ -614,7 +614,7 @@ def evalimages(net:Yolact, input_folder:str, output_folder:str):
     if not isdir(output_folder):
         makedirs(output_folder)
     if not os.path.exists(output_folder):
-        os.mkdir(output_folder)
+        os.makedirs(output_folder)
 
     print()
     for p in Path(input_folder).glob('*'): 
@@ -637,8 +637,8 @@ class CustomDataParallel(torch.nn.DataParallel):
         return sum(outputs, [])
 
 def evalvideo(net:Yolact, path:str, out_path:str=None):
-    if not isdir(dirname(out_path)):
-        makedirs(dirname(out_path))
+    if not isdir(out_path):
+        makedirs(out_path)
     print('evalvideo', path, out_path)
     # If the path is a digit, parse it as a webcam index
     is_webcam = path.isdigit()
