@@ -368,7 +368,6 @@ def train():
 
             cvnrg_linechart('Learning Rate', epoch, cur_lr)
             val_info = compute_validation_map(epoch, iteration, yolact_net, val_dataset, log if args.log else None)
-            print(val_info)
             cvnrg_linecharts('Val Boxes mAP', epoch, val_info['box'])
             cvnrg_linecharts('Val Masks mAP', epoch, val_info['mask'])
 
