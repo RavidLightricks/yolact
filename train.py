@@ -507,6 +507,8 @@ def compute_validation_map(epoch, iteration, yolact_net, dataset, log:Log=None):
         print()
         print("Computing validation mAP (this may take a while)...", flush=True)
         val_info = eval_script.evaluate(yolact_net, dataset, train_mode=True)
+        print(val_info)
+        exit()
         end = time.time()
 
         if log is not None:
