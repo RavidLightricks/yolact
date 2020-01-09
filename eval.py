@@ -869,8 +869,8 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
 
     except KeyboardInterrupt:
         print('\nStopping...')
-    
-    cleanup_and_exit()
+
+    # cleanup_and_exit()
 
 def evaluate(net:Yolact, dataset, train_mode=False):
     net.detect.use_fast_nms = args.fast_nms
