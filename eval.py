@@ -896,7 +896,7 @@ def evaluate(net:Yolact, dataset, train_mode=False):
                 evalvideo(net, inp, out)
             elif isdir(inp):
                 for f_name in listdir(inp):
-                    evalvideo(net, join(inp, f_name), out)
+                    evalvideo(net, join(inp, f_name), join(out, f_name))
             else:
                 print('No such file or directory:', inp)
                 exit()
