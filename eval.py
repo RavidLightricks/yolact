@@ -640,7 +640,7 @@ def evalvideo(net:Yolact, path:str, out_path:str=None):
     if not isdir(dirname(out_path)):
         makedirs(dirname(out_path))
     print('evalvideo', path, out_path)
-    # If the path is a digit, parse it as a webcam index
+    # If the path is a digit, parse it as a webcam index    k
     is_webcam = path.isdigit()
     
     # If the input image size is constant, this make things faster (hence why we can use it in a video setting).
