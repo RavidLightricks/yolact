@@ -637,8 +637,8 @@ class CustomDataParallel(torch.nn.DataParallel):
         return sum(outputs, [])
 
 def evalvideo(net:Yolact, path:str, out_path:str=None):
-    if not isdir(out_path):
-        makedirs(out_path)
+    if not isdir(dirname(out_path)):
+        makedirs(dirname(out_path))
     print('evalvideo', path, out_path)
     # If the path is a digit, parse it as a webcam index
     is_webcam = path.isdigit()
