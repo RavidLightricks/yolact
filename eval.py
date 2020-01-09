@@ -1045,7 +1045,7 @@ def calc_map(ap_data):
     print_maps(all_maps)
     
     # Put in a prettier format so we can serialize it to json during training
-    all_maps = {k: {j: round(u, 2) for j, u in v.items()} for k, v in all_maps.items()}
+    all_maps = {k: {j: round(u, 6) for j, u in v.items()} for k, v in all_maps.items()}
     return all_maps
 
 def print_maps(all_maps):
