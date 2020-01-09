@@ -896,7 +896,8 @@ def evaluate(net:Yolact, dataset, train_mode=False):
                 evalvideo(net, inp, out)
             elif isdir(inp):
                 for f_name in listdir(inp):
-                    evalvideo(net, join(inp, f_name), join(out, f_name))
+                    if f_name.endswith(('mp4', 'MOV')):
+                        evalvideo(net, join(inp, f_name), join(out, f_name))
             else:
                 print('No such file or directory:', inp)
                 exit()
@@ -1118,5 +1119,6 @@ if __name__ == '__main__':
 
 
 # python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --images /data/coco-1/images/val2017:output --score_threshold=0.15 --top_k=15 --display
-# python eval.py --trained_model=models/yolact_plus_resnet50_54_800000.pth --video ./data/video.mov:output --score_threshold=0.15 --top_k=15 --display
+
 # python eval.py --trained_model=weights/yolact_plus_resnet50_54_800000.pth --video  facetune-videos/01_SpanishGirl.MOV:output/01_SpanishGirl1.MOV --score_threshold=0.15 --top_k=1
+# python eval.py --trained_model=weights/yolact_plus_resnet50_54_800000.pth --video  facetune-videos:output/orig_yolact --score_threshold=0.15 --top_k=1
