@@ -245,7 +245,7 @@ def prep_display(dets_out, img, h, w, undo_transform=True, class_color=False, ma
 
             if args.display_text:
                 _class = cfg.dataset.class_names[classes[j]]
-                text_str = '%s: %.6f' % (_class, score) if args.display_scores else _class
+                text_str = '%s: %.2f' % (_class, score) if args.display_scores else _class
 
                 font_face = cv2.FONT_HERSHEY_DUPLEX
                 font_scale = 0.6
@@ -1126,4 +1126,4 @@ if __name__ == '__main__':
 
 # python eval.py --trained_model=weights/yolact_plus_resnet50_54_800000.pth --video  facetune-videos/01_SpanishGirl.MOV:output/01_SpanishGirl1.MOV --score_threshold=0.15 --top_k=1
 
-    # python eval.py --trained_model=YOLACT/output/weights/yolact_plus_resnet50_151_847392.pth --video  /data/facetune-videos:output/person_yolact --score_threshold=0.15 --top_k=1
+# python eval.py --trained_model=YOLACT/output/weights/yolact_plus_resnet50_149_846768.pth --video  /data/facetune-videos:output/person_yolact --score_threshold=0.15 --top_k=1

@@ -59,17 +59,6 @@ def merge_videos_dir(path1, path2, dst_path):
 
 
 
-
-p = '/Users/ravid/Pictures/face_videos/YOLACT/output/tomer/vid1_seg_seg.mp4'
-d = '/Users/ravid/Pictures/face_videos/YOLACT/output/tomer/vid1_seg_seg2.mp4'
-reader = imageio.get_reader(p)
-fps = reader.get_meta_data()['fps']
-writer = imageio.get_writer(d, fps=10)
-for f in reader:
-    writer.append_data(f)
-writer.close()
-exit()
-
 path1 = '/Users/ravid/Pictures/face_videos/YOLACT/output/orig_yolact'
 path2 = '/Users/ravid/Pictures/face_videos/YOLACT/output/person_yolact'
 dst = '/Users/ravid/Pictures/face_videos/YOLACT/output/tolact_orig_vs_person'
