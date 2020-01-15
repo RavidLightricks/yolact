@@ -25,6 +25,7 @@ def put_text(img, text, location=(10, 50)):
                 fontColor,
                 lineType)
 
+
 def merge_videos(src1, src2, name1, name2, dst):
     reader1 = imageio.get_reader(src1)
     reader2 = imageio.get_reader(src2)
