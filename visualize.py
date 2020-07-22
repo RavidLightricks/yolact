@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Lightricks. All rights reserved.
+# Copyright (c) 2020 Lightricks. All rights reserved.
 from data import COLORS
 from utils import timer
 from layers.output_utils import postprocess

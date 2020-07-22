@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Lightricks. All rights reserved.
+# Copyright (c) 2020 Lightricks. All rights reserved.
 
 import logging
 from os.path import split, isdir
